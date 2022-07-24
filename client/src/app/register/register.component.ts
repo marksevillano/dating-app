@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '../_services/account.service';
 
 @Component({
@@ -13,7 +14,7 @@ export class RegisterComponent implements OnInit {
   model: any = {};
   errorMessage: string = "";
 
-  constructor(public accountService : AccountService) { }
+  constructor(public accountService : AccountService, private toastrService : ToastrService) { }
 
   ngOnInit(): void {
 
@@ -23,15 +24,16 @@ export class RegisterComponent implements OnInit {
     console.log('Register!');
     // validate password first
     if (this.model.password !== this.model.confPassword) {
-      this.errorMessage = "Password doesn't match";
+      this.toastrService.error("Password doesn't match","Error");
     } else {
-      this.errorMessage = "";
       delete this.model['confPassword'];
       this.accountService.register(this.model).subscribe(
         response => {
+          this.toastrService.success("Registration complete!", "Success");
           console.log(response);
         },
         error => {
+          this.toastrService.error(error.error, "Error");
           console.log(error);
         }
       );

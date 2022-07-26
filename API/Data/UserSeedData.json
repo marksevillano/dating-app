@@ -108,7 +108,7 @@
         "Country": "Russian Federation",
         "Photos": [
           {
-            "Url": "https://randomuser.me/api/portraits/female/65.jpg",
+            "Url": "https://randomuser.me/api/portraits/women/65.jpg",
             "IsMain": true
           }
         ]
@@ -127,7 +127,7 @@
         "Country": "Chile",
         "Photos": [
           {
-            "Url": "https://randomuser.me/api/portraits/female/61.jpg",
+            "Url": "https://randomuser.me/api/portraits/women/61.jpg",
             "IsMain": true
           }
         ]
@@ -146,7 +146,7 @@
         "Country": "Mali",
         "Photos": [
           {
-            "Url": "https://randomuser.me/api/portraits/female/8.jpg",
+            "Url": "https://randomuser.me/api/portraits/women/8.jpg",
             "IsMain": true
           }
         ]
@@ -165,7 +165,7 @@
         "Country": "Cyprus",
         "Photos": [
           {
-            "Url": "https://randomuser.me/api/portraits/female/97.jpg",
+            "Url": "https://randomuser.me/api/portraits/women/97.jpg",
             "IsMain": true
           }
         ]
@@ -184,7 +184,7 @@
         "Country": "Saint Kitts and Nevis",
         "Photos": [
           {
-            "Url": "https://randomuser.me/api/portraits/female/90.jpg",
+            "Url": "https://randomuser.me/api/portraits/women/90.jpg",
             "IsMain": true
           }
         ]

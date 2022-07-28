@@ -24,7 +24,9 @@
       </ul>
 
       <div class="navbar-nav mr-auto"  *ngIf = "(accountService.currentUser$ | async) as user" dropdown>
-         <div class="dropdown" dropdownToggle>
+        <img src="{{user.photoUrl}}" alt="{{user.photoUrl}}"> 
+        <div class="dropdown" dropdownToggle>
+          
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             Welcome {{user.username | titlecase}}
           </a>

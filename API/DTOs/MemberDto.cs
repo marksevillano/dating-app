@@ -15,6 +15,8 @@ namespace API.DTOs
 
         public int Age { get; set; }
 
+        public DateTime DateOfBirth { get; set; }
+
         public string KnownAs { get; set; }
 
         public DateTime Created { get; set; }
@@ -32,6 +34,7 @@ namespace API.DTOs
         public string City { get; set; }
 
         public string Country { get; set; }
+        public string PreferenceGender { get; set; }
 
         public ICollection<PhotoDto> Photos { get; set; }
     }

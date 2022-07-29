@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -56,11 +53,47 @@ namespace API.Data
             
         }
 
-        public async Task<IEnumerable<MemberDto>> GetMembersAsync()
+        public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
-            return await _context.Users
+            var query = _context.Users
                 .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+                .AsNoTracking()
+                .AsQueryable();
+            query = query.Where(user => (user.UserName != userParams.CurrentUsername));
+            // filter by current user gender preference
+            if (userParams.CurrentUserGenderPreference != "both") {
+                query = query.Where(user => user.Gender == userParams.CurrentUserGenderPreference);
+
+                // filter by user's individual preference
+                // example: if male user prefers female, 
+                // but the female prefers female, then the user must be hidden
+                // in male user's side
+                // but if the female prefers both, then the user still must appear
+                // in the male user's side
+                if (userParams.CurrentUserGender == userParams.CurrentUserGenderPreference) {
+                    query = query.Where(user => user.Gender == user.PreferenceGender || (user.Gender == userParams.CurrentUserGender && user.PreferenceGender == "both"));
+                } 
+                // if straight
+                else {
+                    query = query.Where(user => user.Gender != user.PreferenceGender || (user.Gender != userParams.CurrentUserGender && user.PreferenceGender == "both"));
+                }
+            }
+
+            query = userParams.OrderBy switch
+            {
+                "created" => query.OrderByDescending(user => user.Created),
+                _ => query.OrderByDescending(user => user.LastActive)
+            };
+
+            var minDob = DateTime.Today.AddYears(-userParams.MaxAge -1);
+            var maxDob = DateTime.Today.AddYears(-userParams.MinAge);
+            query = query.Where(user => user.DateOfBirth <= maxDob && user.DateOfBirth >= minDob);
+            
+            
+            return await PagedList<MemberDto>.CreateAsync(
+                query,
+                userParams.PageNumber, userParams.PageSize);
+
         }
 
         public async Task<MemberDto> GetMemberAsync(string username)

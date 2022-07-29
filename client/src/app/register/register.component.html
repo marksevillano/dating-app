@@ -27,6 +27,15 @@
                     </div>
                 </div>
                 <div class="col">
+                    <div class="form-group">
+                        <label class="control-label">Gender Preference:</label>
+                        <select name="" id="" class="form-control" formControlName="preferenceGender" aria-placeholder="Gender Preference">
+                            <option value=""></option>
+                            <option *ngFor="let gender of genderList" value="{{gender.value}}">{{gender.label}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
                     <app-date-input [formControl]="registerForm.controls['dateOfBirth']" [label]="'Date of birth'" [maxDate]="maxDate"></app-date-input>
                 </div>
             </div>

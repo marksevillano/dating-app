@@ -1,5 +1,37 @@
 <div class="row">
-    <div *ngFor="let member of members$ | async" class="col-2">
+    <div class="d-flex justify-content-center mt-3">
+        <h3>Your Matches - {{pagination?.totalItems}} found </h3>
+    </div>
+</div>
+<div class="row">
+   <form #form="ngForm" class="form-inline mb-3" (ngSubmit)="loadMembers()" autocomplete="off">
+        <div class="form-group">
+            <label>Age from:</label>
+            <input type="number" [(ngModel)]="userParams.minAge" name="minAge" class="form-control ml-1 mr-2"/>
+            <label>Age to:</label>
+            <input type="number" [(ngModel)]="userParams.maxAge" name="maxAge" class="form-control ml-1 mr-2"/>
+            <label>Order by:</label>
+            <select name="orderBy" [(ngModel)]="userParams.orderBy" class="form-control ml-1 mr-2">
+                <option *ngFor="let item of orderBy" value="{{item.value}}">{{item.label}}</option>
+            </select>
+            <button class="btn btn-primary ml-1" type="submit">Apply</button>
+            <button class="btn btn-success ml-1" (click)="resetFilters()">Reset Filters</button>
+        </div>
+   </form>
+</div>
+<div class="row">
+    <div *ngFor="let member of members" class="col-2">
         <app-member-card [member]="member"></app-member-card>
     </div>
+</div>
+<div class="d-flex justify-content-center" *ngIf="pagination">
+    <pagination 
+        [boundaryLinks]="true" 
+        [totalItems]="pagination.totalItems"
+        [itemsPerPage]="pagination.itemsPerPage"
+        [(ngModel)]="pagination.currentPage"
+        (pageChanged)="pageChanged($event)"
+        previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+
+    </pagination>
 </div>

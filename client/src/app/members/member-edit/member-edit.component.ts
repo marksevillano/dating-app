@@ -16,6 +16,13 @@ export class MemberEditComponent implements OnInit {
   @ViewChild('editForm') editForm: NgForm;
   member: Member;
   user: User;
+  genderList = [{
+    value: 'male', label: 'Male'
+  }, {
+    value: 'female', label: 'Female'
+  }, {
+    value: 'both', label: 'Both'
+  }];
   @HostListener('window:beforeunload', ['$event']) unloadNotification($event: any) {
     if (this.editForm.dirty) {
       $event.returnValue = true;
@@ -43,6 +50,8 @@ export class MemberEditComponent implements OnInit {
     console.log(this.member);
     this.memberService.updateMember(this.member).subscribe(() => {
       this.editForm.reset(this.member);
+      this.user.preferenceGender = this.member.preferenceGender;
+      this.accountService.setCurrentUser(this.user);
       this.toastrService.success('Profile updated successfully');
     });
     

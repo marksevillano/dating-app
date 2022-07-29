@@ -24,6 +24,9 @@ namespace API.DTOs
         public string Country { get; set; }
 
         [Required]
+        public string PreferenceGender { get; set; }
+
+        [Required]
         [StringLength(8, MinimumLength = 4)]
         public string Password { get; set; }
     }

@@ -17,6 +17,15 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   maxDate: Date;
   validationErrors: string[] = [];
+  genderList = [
+    {
+      value: 'male', label: 'Male'
+    }, {
+      value: 'female', label: 'Female'
+    }, {
+      value: 'both', label: 'Both'
+    }
+  ];
 
   constructor (
       public accountService : AccountService, 
@@ -34,6 +43,7 @@ export class RegisterComponent implements OnInit {
   initializeForm() {
     this.registerForm = this.formBuilderService.group({
       gender: ['male'],
+      preferenceGender: ['', Validators.required],
       knownAs: ['', Validators.required],
       dateOfBirth: ['', Validators.required],
       username: ['', Validators.required],

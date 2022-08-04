@@ -11,6 +11,7 @@
       "Interests": "Eiusmod excepteur dolore veniam incididunt Lorem amet nulla eu magna.",
       "City": "Floriston",
       "Country": "Nepal",
+      "PreferenceGender" : "female",
       "Photos": [
         {
           "Url": "https://randomuser.me/api/portraits/men/28.jpg",
@@ -30,6 +31,7 @@
       "Interests": "Laborum laboris elit velit sint cillum velit et sit cillum laborum magna ex occaecat id.",
       "City": "Castleton",
       "Country": "Georgia",
+      "PreferenceGender" : "male",
       "Photos": [
         {
           "Url": "https://randomuser.me/api/portraits/men/28.jpg",
@@ -49,6 +51,7 @@
       "Interests": "Tempor proident id enim cupidatat cupidatat commodo deserunt consectetur aute sit ullamco.",
       "City": "Veyo",
       "Country": "Grenada",
+      "PreferenceGender" : "female",
       "Photos": [
         {
           "Url": "https://randomuser.me/api/portraits/men/89.jpg",
@@ -68,6 +71,7 @@
       "Interests": "Consectetur nulla voluptate excepteur occaecat irure anim.",
       "City": "Coral",
       "Country": "Zimbabwe",
+      "PreferenceGender" : "female",
       "Photos": [
         {
           "Url": "https://randomuser.me/api/portraits/men/88.jpg",
@@ -87,6 +91,7 @@
       "Interests": "Do ad amet amet incididunt duis fugiat eu veniam et amet magna tempor ex.",
       "City": "Tyhee",
       "Country": "Maldives",
+      "PreferenceGender" : "male",
       "Photos": [
         {
           "Url": "https://randomuser.me/api/portraits/men/25.jpg",
@@ -106,6 +111,7 @@
         "Interests": "Ipsum do eiusmod dolor incididunt irure commodo irure tempor.",
         "City": "Rew",
         "Country": "Russian Federation",
+        "PreferenceGender" : "male",
         "Photos": [
           {
             "Url": "https://randomuser.me/api/portraits/women/65.jpg",
@@ -125,6 +131,7 @@
         "Interests": "Ipsum proident mollit cupidatat incididunt voluptate adipisicing magna velit labore tempor ut amet laborum ad.",
         "City": "Dotsero",
         "Country": "Chile",
+        "PreferenceGender" : "male",
         "Photos": [
           {
             "Url": "https://randomuser.me/api/portraits/women/61.jpg",
@@ -144,6 +151,7 @@
         "Interests": "Aute consequat tempor labore commodo eu et non.",
         "City": "Loma",
         "Country": "Mali",
+        "PreferenceGender" : "male",
         "Photos": [
           {
             "Url": "https://randomuser.me/api/portraits/women/8.jpg",
@@ -163,6 +171,7 @@
         "Interests": "Enim laborum nulla ex id qui ea dolor nisi proident excepteur.",
         "City": "Madaket",
         "Country": "Cyprus",
+        "PreferenceGender" : "male",
         "Photos": [
           {
             "Url": "https://randomuser.me/api/portraits/women/97.jpg",
@@ -182,6 +191,7 @@
         "Interests": "Nisi velit adipisicing proident ullamco aute.",
         "City": "Caberfae",
         "Country": "Saint Kitts and Nevis",
+        "PreferenceGender" : "male",
         "Photos": [
           {
             "Url": "https://randomuser.me/api/portraits/women/90.jpg",

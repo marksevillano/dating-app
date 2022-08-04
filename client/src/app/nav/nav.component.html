@@ -18,17 +18,20 @@
             <a class="nav-link" routerLink="/messages" routerLinkActive="active">Messages</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" *appHasRole="['Admin','Moderator']" routerLink="/admin" routerLinkActive="active">Admin</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" routerLink="/errors" routerLinkActive="active">Errors</a>
           </li>
         </ng-container>
       </ul>
 
       <div class="navbar-nav mr-auto"  *ngIf = "(accountService.currentUser$ | async) as user" dropdown>
-        <img src="{{user.photoUrl}}" alt="{{user.photoUrl}}"> 
+        <img src="{{(user.photoUrl) ? user.photoUrl : './assets/user.png'}}" alt="{{user.photoUrl}}"> 
         <div class="dropdown" dropdownToggle>
           
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-            Welcome {{user.username | titlecase}}
+            Welcome {{user.username || user.KnownAs | titlecase}}
           </a>
           <div class="dropdown-menu mt-3" *dropdownMenu>
             <a class="dropdown-item" href="#" routerLink="/member/edit">Edit Profile</a>

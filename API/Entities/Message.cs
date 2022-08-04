@@ -1,5 +1,9 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace API.Entities
 {
+
+    [Table("Message")]
     public class Message
     {
         public int Id { get; set; }

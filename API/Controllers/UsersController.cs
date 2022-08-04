@@ -35,10 +35,10 @@ namespace API.Controllers
             var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
             userParams.CurrentUsername = user.UserName;
             if (userParams.CurrentUserGenderPreference == null && user != null) {
-                userParams.CurrentUserGenderPreference = user.PreferenceGender;
+                userParams.CurrentUserGenderPreference = user.PreferenceGender != null ? user.PreferenceGender : "both";
             }
             if (userParams.CurrentUserGender == null && user != null) {
-                userParams.CurrentUserGender = user.Gender;
+                userParams.CurrentUserGender = user.Gender != null ? user.Gender : "male";
             }
             var users = await _userRepository.GetMembersAsync(userParams);
             
@@ -47,7 +47,6 @@ namespace API.Controllers
             return Ok(users);
         }
 
-        
         [HttpGet("{username}", Name = "GetUser")]
         public async Task<ActionResult<MemberDto>> GetUser(string username)
         {

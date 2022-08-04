@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace API.Entities
 {
+    [Table("Likes")]
     public class UserLike
     {
         public AppUser SourceUser { get; set; }

@@ -1,18 +1,22 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from '@kolkov/ngx-gallery';
 import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
+import { take } from 'rxjs/operators';
 import { Member } from 'src/app/_models/member';
 import { Message } from 'src/app/_models/message';
+import { User } from 'src/app/_models/user';
+import { AccountService } from 'src/app/_services/account.service';
 import { MembersService } from 'src/app/_services/members.service';
 import { MessageService } from 'src/app/_services/message.service';
+import { PresenceService } from 'src/app/_services/presence.service';
 
 @Component({
   selector: 'app-member-detail',
   templateUrl: './member-detail.component.html',
   styleUrls: ['./member-detail.component.css']
 })
-export class MemberDetailComponent implements OnInit {
+export class MemberDetailComponent implements OnInit, OnDestroy {
   @ViewChild('memberTabs', {static: true}) memberTabs: TabsetComponent;
 
   member: Member;
@@ -20,14 +24,28 @@ export class MemberDetailComponent implements OnInit {
   galleryImages: NgxGalleryImage[];
   activeTab: TabDirective;
   messages: Message[] = [];
+  onlineUsers: string[];
+  isOnline : boolean = false;
+  user: User;
 
-  constructor(private memberService : MembersService, 
+  constructor(
+      public presence: PresenceService,
       private messageService : MessageService, 
-      private route: ActivatedRoute) { }
+      private route: ActivatedRoute,
+      private accountService: AccountService,
+      private router: Router
+  ) {
+    this.accountService.currentUser$.pipe(take(1)).subscribe(user => {
+      this.user = user;
+    });
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   ngOnInit(): void {
+    this.subscribePresence();
     this.route.data.subscribe(data => {
       this.member = data.member;
+      this.isOnline = this.onlineUsers.includes(this.member.userName);
     })
 
     this.route.queryParams.subscribe(params => {
@@ -46,6 +64,10 @@ export class MemberDetailComponent implements OnInit {
       }
     ];
     this.galleryImages = this.getImages();
+  }
+
+  ngOnDestroy() :void {
+    this.messageService.stopHubConnection();
   }
 
   getImages(): NgxGalleryImage[] {
@@ -73,10 +95,22 @@ export class MemberDetailComponent implements OnInit {
 
   onTabActivated(tab: TabDirective) {
     this.activeTab = tab;
-    
+    console.log(this.activeTab.heading +'|'+ this.messages.length);
     if (this.activeTab.heading === 'Messages' && this.messages.length === 0) {
-      this.loadMessages();
+      this.messageService.createHubConnection(this.user, this.member.userName)
+    } else {
+      this.messageService.stopHubConnection();
     }
+  }
+
+  subscribePresence() {
+    this.presence.onlineUsers$.subscribe(
+      onlineUsers => {
+        //console.log(JSON.stringify(onlineUsers) + '|' + this.member?.userName);
+        this.onlineUsers = onlineUsers;
+        this.isOnline = this.onlineUsers.includes(this.member?.userName);
+      }
+    )
   }
 
 }

@@ -56,8 +56,6 @@ namespace API.Data
         public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
             var query = _context.Users
-                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                .AsNoTracking()
                 .AsQueryable();
             query = query.Where(user => (user.UserName != userParams.CurrentUsername));
             // filter by current user gender preference
@@ -91,7 +89,8 @@ namespace API.Data
             
             
             return await PagedList<MemberDto>.CreateAsync(
-                query,
+                query.ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking(),
                 userParams.PageNumber, userParams.PageSize);
 
         }

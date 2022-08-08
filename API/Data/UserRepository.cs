@@ -1,3 +1,4 @@
+using System.Collections;
 using API.DTOs;
 using API.Entities;
 using API.Helpers;
@@ -12,15 +13,12 @@ namespace API.Data
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        private readonly ILogger<UserRepository> _logger;
 
-        public UserRepository(DataContext context, IMapper mapper, ILogger<UserRepository> logger)
+        public UserRepository(DataContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _logger = logger;
         }
-
         public async Task<IEnumerable<AppUser>> GetUsersAsync()
         {
             return await _context.Users
@@ -36,15 +34,9 @@ namespace API.Data
 
         public async Task<AppUser> GetUserByUsernameAsync(string username)
         {
-            _logger.LogInformation("username", username);
             return await _context.Users
                 .Include(user => user.Photos)
                 .SingleOrDefaultAsync(x => x.UserName == username);
-        }
-
-        public async Task<bool> SaveAllAsync()
-        {
-            return await _context.SaveChangesAsync() > 0;
         }
 
         public void Update(AppUser user)
@@ -56,6 +48,8 @@ namespace API.Data
         public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
             var query = _context.Users
+                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
                 .AsQueryable();
             query = query.Where(user => (user.UserName != userParams.CurrentUsername));
             // filter by current user gender preference
@@ -77,11 +71,11 @@ namespace API.Data
                 }
             }
 
-            query = userParams.OrderBy switch
+           /* query = userParams.OrderBy switch
             {
                 "created" => query.OrderByDescending(user => user.Created),
                 _ => query.OrderByDescending(user => user.LastActive)
-            };
+            };*/
 
             var minDob = DateTime.Today.AddYears(-userParams.MaxAge -1);
             var maxDob = DateTime.Today.AddYears(-userParams.MinAge);
@@ -89,8 +83,7 @@ namespace API.Data
             
             
             return await PagedList<MemberDto>.CreateAsync(
-                query.ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                .AsNoTracking(),
+                query,
                 userParams.PageNumber, userParams.PageSize);
 
         }
@@ -100,6 +93,14 @@ namespace API.Data
             return await _context.Users.Where(x => x.UserName == username)
                 .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync();
+        }
+
+        public async Task<AppUser> GetUserGender(string username)
+        {
+            return await _context.Users
+                .Where(x => x.UserName == username)
+                .Select(u => new AppUser { Gender = u.Gender, PreferenceGender = u.PreferenceGender })
+                .FirstOrDefaultAsync();
         }
     }
 }

@@ -1,6 +1,8 @@
+using API.Entities;
+
 namespace API.DTOs
 {
-    public class PhotoDto
+    public class PhotoAdminDto
     {
         public int Id { get; set; }
 
@@ -11,5 +13,9 @@ namespace API.DTOs
         public string PublicId { get; set; }
         
         public bool IsApproved { get; set; }
+        
+        public int AppUserId {get; set;}
+
+        public string Username {get; set;}
     }
 }

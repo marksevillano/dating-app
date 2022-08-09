@@ -1,4 +1,8 @@
+using API.DTOs;
 using API.Entities;
+using API.Extensions;
+using API.Helpers;
+using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +13,12 @@ namespace API.Controllers
     public class AdminController : BaseApiController
     {
         private readonly UserManager<AppUser> _userManager;
-        public AdminController(UserManager<AppUser> userManager)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public AdminController(UserManager<AppUser> userManager, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
 
         [Authorize(Policy = "RequireAdminRole")]
@@ -55,9 +62,42 @@ namespace API.Controllers
 
         [Authorize(Policy = "ModeratePhotoRole")]
         [HttpGet("photos-to-moderate")]
-        public ActionResult GetPhotosForModeration()
+        public async Task<ActionResult<IEnumerable<PhotoDto>>> GetPhotosForModeration([FromQuery] PaginationParams pageParams)
         {
-            return Ok("Admins and moderators can see this");
+            var photos = await _unitOfWork.PhotoRepository.GetUnapprovedPhotos(pageParams);
+            Response.AddPaginationHeader(photos.CurrentPage, photos.PageSize, photos.TotalCount, photos.TotalPages);
+
+            return Ok(photos);
+        }
+
+        [Authorize(Policy = "ModeratePhotoRole")]
+        [HttpPut("photos-approve")]
+        public async Task<ActionResult> ApprovePhotos(PhotoApproveDto photoApproveDto)
+        {
+            Boolean predicate = photoApproveDto.Predicate;
+            
+            if (photoApproveDto.PhotoIds.Length > 0 && predicate != null) {
+                foreach (var photoId in photoApproveDto.PhotoIds)
+                {
+                    var photo = await _unitOfWork.PhotoRepository.GetPhoto(photoId);
+                    var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(photo.AppUser.UserName);
+                    var countApprovedPhotos = 0;
+                    foreach (var p in user.Photos)
+                    {
+                        if (p.IsApproved == true)
+                        {
+                            countApprovedPhotos += 1;
+                        }
+                    }
+                    if (countApprovedPhotos == 0) {
+                        photo.IsMain = true;
+                    }
+                    var photoIdModified = _unitOfWork.PhotoRepository.ApproveOrDisapprovePhoto(photo, predicate);
+                }
+                await _unitOfWork.Complete();
+                return Ok("{\"message\": \"Photos are " + (predicate ? "Approved" : "Rejected") + "\"}");
+            }
+            return BadRequest("No Photo Ids selected");
         }
     }
 }

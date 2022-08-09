@@ -3,4 +3,8 @@ export interface Photo {
     url: string;
     isMain: boolean;
     publicId?: any;
+    isApproved: boolean;
+    username?: string;
+    userId?: string,
+    marked?: boolean;
 }

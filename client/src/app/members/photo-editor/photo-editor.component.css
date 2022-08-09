@@ -8,6 +8,26 @@ img.img-thumbnail {
     border: dotted 3px red;
 }
 
-imput[type=file] {
+input[type=file] {
     color: transparent;
+}
+
+.pic {
+    position: relative;
+    overflow: hidden;
+    width: 100px;
+    height: 100px;
+  }
+
+.img-text {
+    position: absolute;
+    left: 50%;
+    bottom: 20%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #FFF;
+}
+
+img.blur {
+    filter: blur(4px);
 }

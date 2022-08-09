@@ -15,7 +15,8 @@
       "Photos": [
         {
           "Url": "https://randomuser.me/api/portraits/men/28.jpg",
-          "IsMain": true
+          "IsMain": true,
+          "IsApproved": true
         }
       ]
     },
@@ -35,7 +36,8 @@
       "Photos": [
         {
           "Url": "https://randomuser.me/api/portraits/men/28.jpg",
-          "IsMain": true
+          "IsMain": true,
+          "IsApproved": true
         }
       ]
     },
@@ -55,7 +57,8 @@
       "Photos": [
         {
           "Url": "https://randomuser.me/api/portraits/men/89.jpg",
-          "IsMain": true
+          "IsMain": true,
+          "IsApproved": true
         }
       ]
     },
@@ -75,7 +78,8 @@
       "Photos": [
         {
           "Url": "https://randomuser.me/api/portraits/men/88.jpg",
-          "IsMain": true
+          "IsMain": true,
+          "IsApproved": true
         }
       ]
     },
@@ -95,13 +99,14 @@
       "Photos": [
         {
           "Url": "https://randomuser.me/api/portraits/men/25.jpg",
-          "IsMain": true
+          "IsMain": true,
+          "IsApproved": true
         }
       ]
     },
     {
         "UserName": "Beverly",
-        "Gender": "male",
+        "Gender": "female",
         "DateOfBirth": "1959-10-13",
         "KnownAs": "Beverly",
         "Created": "2019-01-13",
@@ -115,13 +120,14 @@
         "Photos": [
           {
             "Url": "https://randomuser.me/api/portraits/women/65.jpg",
-            "IsMain": true
+            "IsMain": true,
+            "IsApproved": true
           }
         ]
       },
       {
         "UserName": "Jennifer",
-        "Gender": "male",
+        "Gender": "female",
         "DateOfBirth": "1972-12-12",
         "KnownAs": "Jennifer",
         "Created": "2019-07-28",
@@ -141,7 +147,7 @@
       },
       {
         "UserName": "Mindy",
-        "Gender": "male",
+        "Gender": "female",
         "DateOfBirth": "1961-02-20",
         "KnownAs": "Mindy",
         "Created": "2019-08-26",
@@ -155,13 +161,14 @@
         "Photos": [
           {
             "Url": "https://randomuser.me/api/portraits/women/8.jpg",
-            "IsMain": true
+            "IsMain": true,
+            "IsApproved": true
           }
         ]
       },
       {
         "UserName": "Patty",
-        "Gender": "male",
+        "Gender": "female",
         "DateOfBirth": "1997-04-05",
         "KnownAs": "Patty",
         "Created": "2020-03-06",
@@ -175,13 +182,14 @@
         "Photos": [
           {
             "Url": "https://randomuser.me/api/portraits/women/97.jpg",
-            "IsMain": true
+            "IsMain": true,
+            "IsApproved": true
           }
         ]
       },
       {
         "UserName": "Katheryn",
-        "Gender": "male",
+        "Gender": "female",
         "DateOfBirth": "1977-07-29",
         "KnownAs": "Katheryn",
         "Created": "2020-06-03",
@@ -195,7 +203,8 @@
         "Photos": [
           {
             "Url": "https://randomuser.me/api/portraits/women/90.jpg",
-            "IsMain": true
+            "IsMain": true,
+            "IsApproved": true
           }
         ]
       }

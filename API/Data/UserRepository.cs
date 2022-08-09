@@ -1,6 +1,7 @@
 using System.Collections;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
 using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
@@ -35,7 +36,10 @@ namespace API.Data
         public async Task<AppUser> GetUserByUsernameAsync(string username)
         {
             return await _context.Users
-                .Include(user => user.Photos)
+                .Include(user => 
+                    user.Photos.Where(photo =>
+                    photo.IsApproved == true
+                ))
                 .SingleOrDefaultAsync(x => x.UserName == username);
         }
 
@@ -47,8 +51,25 @@ namespace API.Data
 
         public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
+            // custom map config to filter photos who are approved
+            var config = new MapperConfiguration((cfg) =>
+            {
+               cfg.CreateMap<AppUser, MemberDto>()
+                .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => 
+                    src.Photos.FirstOrDefault(x => x.IsMain && x.IsApproved).Url
+                ))
+                .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => 
+                    src.Photos.Where(p => p.IsApproved == true)
+                ))
+                .ForMember(dest => dest.Age, opt => opt.MapFrom(src =>
+                    src.DateOfBirth.CalculateAge()
+                ));
+                cfg.CreateMap<Photo, PhotoDto>();
+                //cfg.CreateMap<Photo, MemberDto>();
+            });
+
             var query = _context.Users
-                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<MemberDto>(config)
                 .AsNoTracking()
                 .AsQueryable();
             query = query.Where(user => (user.UserName != userParams.CurrentUsername));
@@ -71,16 +92,15 @@ namespace API.Data
                 }
             }
 
-           /* query = userParams.OrderBy switch
+           query = userParams.OrderBy switch
             {
                 "created" => query.OrderByDescending(user => user.Created),
                 _ => query.OrderByDescending(user => user.LastActive)
-            };*/
+            };
 
             var minDob = DateTime.Today.AddYears(-userParams.MaxAge -1);
             var maxDob = DateTime.Today.AddYears(-userParams.MinAge);
             query = query.Where(user => user.DateOfBirth <= maxDob && user.DateOfBirth >= minDob);
-            
             
             return await PagedList<MemberDto>.CreateAsync(
                 query,
@@ -88,10 +108,35 @@ namespace API.Data
 
         }
 
-        public async Task<MemberDto> GetMemberAsync(string username)
+        public async Task<MemberDto> GetMemberAsync(string username, string currUser)
         {
+            var config = new MapperConfiguration((cfg) =>
+            {
+                // if user retrieved is not the current user logged in, then remove the unapproved photos
+                if (username != currUser) {
+                    cfg.CreateMap<AppUser, MemberDto>()
+                    .ForMember(dest => dest.Photos, opt => opt.MapFrom(src => 
+                        src.Photos.Where(p => (p.AppUser.UserName != currUser && p.IsApproved == true))
+                    ))
+                    .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => 
+                        src.Photos.FirstOrDefault(x => x.IsMain && x.IsApproved).Url
+                    ))
+                    .ForMember(dest => dest.Age, opt => opt.MapFrom(src =>
+                        src.DateOfBirth.CalculateAge()
+                    ));
+                } else {
+                    cfg.CreateMap<AppUser, MemberDto>()
+                    .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => 
+                        src.Photos.FirstOrDefault(x => x.IsMain && x.IsApproved).Url
+                    ))
+                    .ForMember(dest => dest.Age, opt => opt.MapFrom(src =>
+                        src.DateOfBirth.CalculateAge()
+                    ));
+                }
+                cfg.CreateMap<Photo, PhotoDto>();
+            });
             return await _context.Users.Where(x => x.UserName == username)
-                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<MemberDto>(config)
                 .SingleOrDefaultAsync();
         }
 

@@ -1,0 +1,9 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Photo from {{photo.username | titlecase}}</h4>
+</div>
+<div class="modal-body text-center">
+    <img src="{{photo.url}}" alt="" class="img-modal">
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="close()" >Close</button>
+</div>
